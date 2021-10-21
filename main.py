@@ -1,4 +1,13 @@
-def is_valid(combo: int, n: int):
+def is_valid(combo: int, n: int) -> bool:
+    """Checks whether the given combination is valid
+
+    Args:
+        combo (int): The combination
+        n (int): Total academic days
+
+    Returns:
+        [bool]: If a valid combination return True otherwise False
+    """
     i = 0
     while i < n - 3:
         if not (0xF << i) & combo:
@@ -7,7 +16,15 @@ def is_valid(combo: int, n: int):
     return True
 
 
-def generate_combination(n):
+def generate_combination(n: int):
+    """Combination generator
+
+    Args:
+        n (int): Total academic days
+
+    Yields:
+        int : Next valid combination
+    """
     i = 0
     while i < 2 ** n:
         if is_valid(i, n):
