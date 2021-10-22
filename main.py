@@ -1,45 +1,40 @@
-def is_valid(combo: int, n: int) -> bool:
-    """Checks whether the given combination is valid
+from functools import lru_cache
 
-    Args:
-        combo (int): The combination
-        n (int): Total academic days
-
-    Returns:
-        [bool]: If a valid combination return True otherwise False
-    """
-    i = 0
-    while i < n - 3:
-        if not (0xF << i) & combo:
-            return False
-        i += 1
-    return True
+CONSEC_DAYS = 4
 
 
-def generate_combination(n: int):
-    """Combination generator
-
-    Args:
-        n (int): Total academic days
-
-    Yields:
-        int : Next valid combination
-    """
-    i = 0
-    while i < 2 ** n:
-        if is_valid(i, n):
-            yield i
-        i += 1
+@lru_cache(maxsize=100)
+def count_invalids(n: int):
+    if n < CONSEC_DAYS:
+        return 0
+    if n == CONSEC_DAYS:
+        return 1
+    total = 0
+    for i in range(n - CONSEC_DAYS + 1):
+        current_values = 1
+        if i < n - CONSEC_DAYS:
+            current_values *= 2 ** (n - CONSEC_DAYS - i)
+        if i > 1:
+            current_values *= (2 ** (i - 1)) - count_invalids(i - 1)
+        total += current_values
+    return total
 
 
 def main():
-    n = int(input("Enter total Days: ").strip())
-    total = 0
-    not_missed = 0
-    for i in generate_combination(n):
-        total += 1
-        not_missed += i & 1
-    print(f"{total - not_missed} / {total}")
+    try:
+        n = int(input("Enter total days: ").strip())
+    except ValueError:
+        print("Enter a valid number")
+        exit(1)
+    total = 2 ** n
+    valid = 2 ** n - count_invalids(n)
+    missed = int(total / 2)
+    missed -= count_invalids(n - 1)
+    if n == CONSEC_DAYS:
+        missed -= 1
+    elif n > CONSEC_DAYS:
+        missed -= 2 ** (n - CONSEC_DAYS - 1) - count_invalids(n - CONSEC_DAYS - 1)
+    print(f"{missed} / {valid}")
 
 
 if __name__ == "__main__":
