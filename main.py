@@ -3,7 +3,7 @@ from functools import lru_cache
 CONSEC_DAYS = 4
 
 
-@lru_cache(maxsize=1000)
+@lru_cache(maxsize=100)
 def count_invalids(n: int):
     if n < CONSEC_DAYS:
         return 0
