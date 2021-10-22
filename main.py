@@ -14,12 +14,12 @@ def count_invalids(n: int):
 
     total = (1 << (n - CONSEC_DAYS)) + (1 << (n - CONSEC_DAYS - 1))
 
-    for i in range(2, n - CONSEC_DAYS):
+    for i in range(2, n - CONSEC_DAYS + 1):
         current_values = 1 << (n - CONSEC_DAYS - i)
         current_values *= (1 << (i - 1)) - count_invalids(i - 1)
         total += current_values
 
-    return total + (1 << (n - CONSEC_DAYS - 1)) - count_invalids(n - CONSEC_DAYS - 1)
+    return total
 
 
 def main():
